@@ -53,7 +53,7 @@ mistribaazar/
 
 1. Install **Node.js**
 2. Clone the repository:
- git clone https://github.com/iamsamriddhiiii/mistribaazar_webapp.git
+ git clone https://github.com/iamsamriddhiiii/Mistribazaar_webapp.git
 3. Navigate to project folder
 4. Install dependencies:
    npm install
