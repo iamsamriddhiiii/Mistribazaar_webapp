@@ -49,5 +49,23 @@ mistribaazar/
 │── config/
 │── README.md
 
+##  How to Run the Project Locally
 
+1. Install **Node.js**
+2. Clone the repository:
+ git clone https://github.com/iamsamriddhiiii/mistribaazar_webapp.git
+3. Navigate to project folder
+4. Install dependencies:
+   npm install
+5. Configure environment variables:
+- Create a `.env` file
+- Add database URL and port
+6. Start the server:
+   npm start
+7. Open browser:
+http://localhost:3000
+
+## Author
+
+**Samriddhi Batham**
 
