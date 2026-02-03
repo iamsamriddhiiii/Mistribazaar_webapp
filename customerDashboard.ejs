@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Dashboard</title>
+  <link rel="stylesheet" href="/customerDashboard.css">
+  <style>
+    /* ------------------ Card Styles ------------------ */
+    .dashboard-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 20px;
+    }
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      position: relative;
+      background-color: #f9f9f9;
+    }
+    .card h3 {
+      margin: 0 0 5px 0;
+    }
+    .card button {
+      margin-top: 10px;
+    }
+    .card-content {
+      display: none;
+      margin-top: 15px;
+    }
+    .card-content.active {
+      display: block;
+    }
+
+    /* Worker/Request card inside content */
+    .worker-card, .request-card {
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background-color: #fff;
+    }
+    textarea {
+      width: 100%;
+      min-height: 50px;
+      margin: 5px 0;
+      padding: 5px;
+      border-radius: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 5px;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <% const roleIcon = "👋"; %>
+  <%- include('partials/navbar', { user: user, roleIcon: roleIcon }) %>
+
+  <h2 style="margin-left:20px;">Welcome, <%= user.name %> 👋</h2>
+
+  <div class="dashboard-cards">
+    <% const cards = [
+      { title: "Find Local Workers", desc: "Explore nearby professionals quickly.", btn: "Explore Services", id: "card0" },
+      { title: "Your Requests", desc: "Check current requests and updates.", btn: "View Requests", id: "card1" },
+      { title: "Update Profile", desc: "Manage your personal details.", btn: "Edit Profile", id: "card2" }
+    ]; %>
+
+    <% cards.forEach((card, index) => { %>
+      <div class="card" id="<%= card.id %>">
+        <h3><%= card.title %></h3>
+        <p><%= card.desc %></p>
+        <button class="btn" onclick="toggleContent(<%= index %>)"><%= card.btn %></button>
+
+        <!-- Hidden content inside card -->
+        <div class="card-content" id="content<%= index %>">
+          <% if(index === 0) { %>
+            <!-- Explore Services: Workers list -->
+            <% if(workers && workers.length > 0) { %>
+              <% workers.forEach(worker => { %>
+                <div class="worker-card">
+                  <h4><%= worker.name %> (<%= worker.work_type %>)</h4>
+                  <p>Experience: <%= worker.experience %> years</p>
+                  <p>Charges: ₹<%= worker.charges %></p>
+                  <p>Contact: <%= worker.phone %></p>
+                  <form action="/hire" method="POST">
+                    <input type="hidden" name="worker_id" value="<%= worker.person_id %>">
+                    <input type="hidden" name="customer_id" value="<%= user.id %>">
+                    <textarea name="message" placeholder="Write your request..." required></textarea>
+                    <button type="submit" class="btn">Hire</button>
+                  </form>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <p>No workers found yet.</p>
+            <% } %>
+          <% } else if(index === 1) { %>
+            <!-- Your Requests -->
+            <% if(requests && requests.length > 0) { %>
+              <% requests.forEach(r => { %>
+                <div class="request-card">
+                  <p><strong>Worker:</strong> <%= r.worker_name %></p>
+                  <p><strong>Message:</strong> <%= r.message %></p>
+                  <p><strong>Status:</strong> <%= r.status %></p>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <p>You have not sent any requests yet.</p>
+            <% } %>
+          <% } else if(index === 2) { %>
+            <!-- Edit Profile -->
+            <form action="/updateProfile/<%= user.id %>" method="POST">
+              <input type="text" name="name" value="<%= user.name %>" required placeholder="Name">
+              <input type="email" name="email" value="<%= user.email %>" required placeholder="Email">
+              <input type="text" name="phone" value="<%= user.phone %>" required placeholder="Phone">
+              <input type="text" name="location" value="<%= user.location %>" required placeholder="Location">
+              <button type="submit" class="btn">Save Changes</button>
+            </form>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <script>
+    function toggleContent(index) {
+      const content = document.getElementById(`content${index}`);
+      content.classList.toggle("active"); // show/hide content
+    }
+  </script>
+</body>
+</html>

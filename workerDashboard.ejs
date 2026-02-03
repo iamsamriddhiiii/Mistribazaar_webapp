@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worker Dashboard</title>
+  <link rel="stylesheet" href="/workerDashboard.css">
+  <style>
+    body.worker { background: linear-gradient(180deg,#f0f4ff,#5cadf9); font-family: Arial,sans-serif; }
+    .dashboard-cards { display: flex; flex-direction: column; gap: 15px; margin: 20px; }
+    .card { border: 1px solid #ccc; border-radius: 10px; padding: 15px; background-color: #f9f9f9; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .card h3 { margin: 0 0 5px 0; }
+    .card button { margin-top: 10px; background-color:#007BFF; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; }
+    .card button:hover { background-color:#0056b3; }
+    .card-content { display: none; margin-top: 15px; }
+    .card-content.active { display: block; }
+    .worker-card { border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-bottom: 10px; background-color: #fff; }
+    input, textarea { width: 100%; padding: 5px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; }
+    .btn-accept { background-color:#28a745; color:white; margin-right:5px; padding:5px 10px; border-radius:5px; border:none; cursor:pointer; }
+    .btn-accept:hover { background-color:#1e7e34; }
+    .btn-reject { background-color:#dc3545; color:white; padding:5px 10px; border-radius:5px; border:none; cursor:pointer; }
+    .btn-reject:hover { background-color:#a71d2a; }
+  </style>
+</head>
+<body class="worker">
+  <% const roleIcon = "🧰"; %>
+  <%- include('partials/navbar', { user: user, roleIcon: roleIcon }) %>
+
+  <h2 style="margin-left:20px;">Welcome, <%= user.name %> 🧰</h2>
+
+  <div class="dashboard-cards">
+    <% const cards = [
+      { title: "Add New Work", desc: "Add your work details.", btn: "Add Work", id: "card0" },
+      { title: "Your Work", desc: "See your existing work details.", btn: "View Work", id: "card1" },
+      { title: "Earnings & Stats", desc: "View your performance and earnings.", btn: "View Stats", id: "card2" }
+    ]; %>
+
+    <% cards.forEach((card,index)=>{ %>
+      <div class="card" id="<%= card.id %>">
+        <h3><%= card.title %></h3>
+        <p><%= card.desc %></p>
+        <button class="btn" onclick="toggleContent(<%= index %>)"><%= card.btn %></button>
+
+        <div class="card-content" id="content<%= index %>">
+          <% if(index===0){ %>
+            <!-- Add Work Form -->
+            <form action="/addWork/<%= user.id %>" method="POST">
+              <input type="text" name="work_type" placeholder="Work Type (e.g., Plumber)" required>
+              <input type="text" name="experience" placeholder="Experience (in years)" required>
+              <input type="text" name="charges" placeholder="Charges (per day/hour)" required>
+              <textarea name="description" placeholder="Describe your work skills"></textarea>
+              <button type="submit" class="btn">Add Work</button>
+            </form>
+          <% } else if(index===1){ %>
+            <!-- Existing Work List -->
+            <% if(work && work.length>0){ %>
+              <% work.forEach(w=>{ %>
+                <div class="worker-card">
+                  <h4><%= w.work_type %></h4>
+                  <p>Experience: <%= w.experience %> years</p>
+                  <p>Charges: ₹<%= w.charges %></p>
+                  <p>Description: <%= w.description %></p>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <p>No work details added yet.</p>
+            <% } %>
+          <% } else if(index===2){ %>
+            <p>Your earnings and stats will appear here.</p>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <!-- Hire Requests Card -->
+  <div class="card" id="card3">
+    <h3>Hire Requests</h3>
+    <button class="btn" onclick="toggleContent(3)">View Requests</button>
+    <div class="card-content" id="content3">
+      <% if(hires && hires.length>0){ %>
+        <% hires.forEach(h=>{ %>
+          <div class="worker-card">
+            <h4>Customer: <%= h.customer_name %></h4>
+            <p>Phone: <%= h.customer_phone %></p>
+            <p>Message: <%= h.message %></p>
+            <p>Status: <%= h.status ? h.status: 'pending' %></p>
+
+            <!-- Approve/Reject Form -->
+            <form action="/updateStatus/<%= h.id %>" method="POST" style="margin-top:10px;">
+              <input type="hidden" name="worker_id" value="<%= user.id %>"> <!-- current worker ID -->
+              <button type="submit" name="status" value="accepted" class="btn-accept">Approve</button>
+              <button type="submit" name="status" value="rejected" class="btn-reject">Reject</button>
+            </form>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>No hire requests yet.</p>
+      <% } %>
+    </div>
+  </div>
+
+<script>
+function toggleContent(index){
+  const content=document.getElementById(`content${index}`);
+  content.classList.toggle("active");
+}
+</script>
+</body>
+</html>

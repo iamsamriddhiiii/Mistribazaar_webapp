@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MistriBazar - Register</title>
+  <link rel="stylesheet" href="/register.css">
+</head>
+<body>
+  <div class="form-container">
+    <h2>Register on MistriBazar</h2>
+
+    <% if (message) { %>
+      <p class="msg"><%= message %></p>
+    <% } %>
+
+    <form action="/register" method="POST">
+     <input 
+        id="name" 
+        type="text" 
+        placeholder="Full Name" 
+        name="name" 
+        required 
+        pattern="^[A-Za-z\s]+$" 
+        title="Name should contain only alphabets and spaces.">
+
+
+      <input type="email" placeholder="Email ID" name="email" required>
+
+     <input 
+        id="phone" 
+        type="tel" 
+        placeholder="Phone no." 
+        name="phone" 
+        required 
+        pattern="^[6-9][0-9]{9}$" 
+        title="Enter a valid 10-digit phone number starting with 6, 7, 8, or 9.">
+        
+      <input type="text" placeholder="Location" name="location" required>
+
+      <select name="role" required>
+  <option value="" disabled selected>Role</option>
+  <option value="customer">Customer</option>
+  <option value="worker">Worker</option>
+</select>
+
+
+     
+      <input type="password" placeholder="Password" name="password" required>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p>Already registered? <a href="/login">Login here</a></p>
+  </div>
+</body>
+</html>

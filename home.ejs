@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mistri – Connect Local Labour & Customers</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/home.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <h1>Mistri</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/services">Services</a>
+        <a href="/howitwork">How It Works</a>
+        <a href="/register">Login</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <h2>Find Trusted Local Labour Easily</h2>
+      <p>Connecting customers with skilled workers in your area</p>
+      <div class="search-box">
+        <select>
+          <option>Select Service</option>
+          <option>Plumber</option>
+          <option>Electrician</option>
+          <option>Carpenter</option>
+          <option>Painter</option>
+        </select>
+        <input type="text" placeholder="Enter location" />
+        <button>Search</button>
+      </div>
+    </section>
+
+    <!-- Counters -->
+    <section class="counters">
+      <div>
+        <div class="counter" data-target="5000">0</div>
+        <p>Happy Customers</p>
+      </div>
+      <div>
+        <div class="counter" data-target="2000">0</div>
+        <p>Skilled Workers</p>
+      </div>
+      <div>
+        <div class="counter" data-target="120">0</div>
+        <p>Cities Covered</p>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services">
+      <h3>Popular Services</h3>
+      <div class="service-grid">
+        <div class="card">🔧 Plumbing</div>
+        <div class="card">💡 Electrician</div>
+        <div class="card">🪚 Carpenter</div>
+        <div class="card">🎨 Painter</div>
+        <div class="card">🏠 Mason</div>
+        <div class="card">🧹 Cleaning</div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+      <h3>What Our Users Say</h3>
+      <div class="testimonial-container">
+        <div class="testimonial active">
+          "Mistri helped me find a reliable plumber in minutes!"
+          <span>- Rohan Sharma</span>
+        </div>
+        <div class="testimonial">
+          "Affordable and quick service. Highly recommended."
+          <span>- Priya Verma</span>
+        </div>
+        <div class="testimonial">
+          "As a worker, I got many clients from Mistri. Great platform!"
+          <span>- Amit Kumar</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>© <%= new Date().getFullYear() %> Mistri – Connecting Local Labour & Customers</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+      // Counter Animation
+      const counters = document.querySelectorAll(".counter");
+      counters.forEach((counter) => {
+        counter.innerText = "0";
+        const update = () => {
+          const target = +counter.getAttribute("data-target");
+          const c = +counter.innerText;
+          const inc = target / 200;
+          if (c < target) {
+            counter.innerText = Math.ceil(c + inc);
+            setTimeout(update, 10);
+          } else {
+            counter.innerText = target;
+          }
+        };
+        update();
+      });
+
+      // Testimonial Slider
+      const testimonials = document.querySelectorAll(".testimonial");
+      let index = 0;
+      setInterval(() => {
+        testimonials[index].classList.remove("active");
+        index = (index + 1) % testimonials.length;
+        testimonials[index].classList.add("active");
+      }, 4000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MistriBazar - Login</title>
+  <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+  <div class="form-container">
+    <h2>Login to MistriBazar</h2>
+
+    <% if (message) { %>
+      <p class="msg"><%= message %></p>
+    <% } %>
+
+    <form action="/login" method="POST">
+      
+      <input type="email" placeholder="Email ID" name="email" required>
+
+     
+      <input type="password" placeholder="Password" name="password" required>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p>New user? <a href="/register">Create account</a></p>
+  </div>
+</body>
+</html>
